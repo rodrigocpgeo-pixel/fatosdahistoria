@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Os Fatos do Tempo</title>
+    <title>Os Fatos da História</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,45 +19,25 @@
         .historical-font {
             font-family: 'Cinzel', serif;
         }
-        /* Efeito de vidro borrado avançado */
+        /* Painel com efeito translúcido (Glassmorphism) */
         .glassmorphism {
             background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(251, 191, 36, 0.15);
         }
-        /* Estilos para o card arrastável compacto com transição de expansão */
+        /* Configuração de transição dos cards do jogo */
         .draggable-card {
             touch-action: none;
             cursor: grab;
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
                         box-shadow 0.2s ease, 
-                        max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
                         border-color 0.2s ease;
-            max-height: 54px; /* Estado colapsado inicial */
-            overflow: hidden;
         }
         .draggable-card:active {
             cursor: grabbing;
         }
-        .draggable-card.expanded {
-            max-height: 250px; /* Expande para mostrar descrição */
-            border-color: rgba(251, 191, 36, 0.5);
-            background-color: rgba(21, 30, 50, 0.95);
-        }
-        .card-details {
-            transition: opacity 0.25s ease-in-out, transform 0.25s ease-out;
-            transform: translateY(-5px);
-        }
-        .draggable-card.expanded .card-details {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            transform: translateY(0);
-        }
-        .draggable-card.expanded .card-arrow {
-            transform: rotate(180deg);
-            color: #fbbf24;
-        }
+        /* Estado visual aplicado apenas durante o arraste ativo */
         .dragging {
             cursor: grabbing;
             z-index: 1000 !important;
@@ -65,17 +45,18 @@
             box-shadow: 0 25px 50px -12px rgba(251, 191, 36, 0.35) !important;
             opacity: 0.95;
         }
-        /* Alvo de encaixe iluminado */
+        /* Destacamento visual dos alvos durante a mira de colisão */
         .slot-glow-active {
             box-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
             border-color: rgba(251, 191, 36, 0.9) !important;
             transform: scale(1.1);
         }
+        /* Alvo devidamente solucionado */
         .slot-glow-correct {
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
             border-color: rgba(16, 185, 129, 0.8) !important;
         }
-        /* Custom scrollbar para listas grandes e o deck */
+        /* Barra de rolagem estilizada para painéis horizontais e modais */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -95,10 +76,11 @@
 </head>
 <body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden relative selection:bg-amber-500 selection:text-slate-950">
 
+    <!-- Fundo ambiental gradiente dinâmico -->
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-950/20 via-slate-950 to-black pointer-events-none z-0"></div>
 
     <script>
-        // --- SINTETIZADOR DE SOM NATIVO (Web Audio API) ---
+        // Gerenciador de efeitos sonoros utilizando a Web Audio API
         const SoundFX = {
             ctx: null,
             muted: false,
@@ -157,12 +139,12 @@
                     osc.start(time);
                     osc.stop(time + duration);
                 } catch (e) {
-                    console.warn("Audio Error:", e);
+                    console.warn("Erro ao reproduzir som:", e);
                 }
             }
         };
 
-        // --- BANCO DE DADOS DE ERAS HISTÓRICAS REVISADO E CORRIGIDO ---
+        // Banco de dados contendo as eras históricas e seus respectivos marcos cronológicos
         const gameEras = [
             {
                 id: "antiguidade",
@@ -177,7 +159,7 @@
                     { year: 800, title: "Império Carolíngio", desc: "Carlos Magno é coroado Imperador do Ocidente, unificando a Europa sob o cristianismo.", icon: "fa-crown" },
                     { year: 1095, title: "A Primeira Cruzada", desc: "O Papa Urbano II convoca a expedição militar cristã para capturar Jerusalém.", icon: "fa-cross" },
                     { year: 1347, title: "A Peste Negra", desc: "A devastadora epidemia de peste bubônica desembarca na Europa dizimando terços da população.", icon: "fa-skull" },
-                    { year: 1453, title: "Queda de Constantinopla", desc: "O Império Otomano conquista a capital Bizantina, pondo fim à Idade Média e ao Império Romano.", icon: "fa-fort-awesome" }
+                    { year: 1453, title: "Queda de Constantinopla", desc: "O Império Otomano conquista a capital Bizantina, pondo fim à Idade Média e ao Império Romano do Oriente.", icon: "fa-fort-awesome" }
                 ]
             },
             {
@@ -187,7 +169,7 @@
                 accentColor: "from-emerald-600 to-teal-500",
                 events: [
                     { year: 1500, title: "Descobrimento do Brasil", desc: "A esquadra de Pedro Álvares Cabral aporta no litoral sul do território baiano.", icon: "fa-ship" },
-                    { year: 1530, title: "Martim Afonso de Sousa", desc: "Partida da expedição colonizadora para fundar as primeiras vilas e introduzir a cana-de-açúcar.", icon: "fa-compass" },
+                    { year: 1532, title: "Fundação de São Vicente", desc: "Martim Afonso de Sousa funda a primeira vila colonial do Brasil e introduz o cultivo de cana-de-açúcar.", icon: "fa-compass" },
                     { year: 1630, title: "Invasão Holandesa", desc: "A Companhia das Índias Ocidentais invade Pernambuco para dominar o comércio de açúcar.", icon: "fa-tent" },
                     { year: 1789, title: "Inconfidência Mineira", desc: "Conspiração separatista republicana é sufocada pelas forças da Coroa em Vila Rica.", icon: "fa-scroll" },
                     { year: 1808, title: "Família Real no Rio", desc: "A corte de D. João VI desembarca no Brasil fugindo do bloqueio continental de Napoleão.", icon: "fa-crown" },
@@ -271,7 +253,7 @@
                     <i class="fa-solid fa-clock-rotate-left text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="historical-font text-xl md:text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">OS FATOS DO TEMPO</h1>
+                    <h1 class="historical-font text-xl md:text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">OS FATOS DA HISTÓRIA</h1>
                     <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Um jogo sobre história</p>
                 </div>
             </div>
@@ -280,6 +262,10 @@
                 <button id="sound-toggle-btn" onclick="toggleSound()" class="text-slate-400 hover:text-slate-200 transition-colors p-2 text-lg" title="Ativar/Desativar Som">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-amber-400"></i>
                 </button>
+                <button onclick="triggerImport()" class="text-xs bg-slate-900/80 hover:bg-slate-800 text-emerald-400 font-semibold px-4 py-2 rounded-lg transition-all border border-emerald-500/30 flex items-center gap-2">
+                    <i class="fa-solid fa-file-import"></i> <span class="hidden sm:inline">Importar Linha</span>
+                </button>
+                <input type="file" id="import-file-input" class="hidden" accept=".json" onchange="importCustomEra(event)">
                 <button onclick="openCustomTimelineModal()" class="text-xs bg-slate-900/80 hover:bg-slate-800 text-amber-300 font-semibold px-4 py-2 rounded-lg transition-all border border-amber-500/30 flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle"></i> <span class="hidden sm:inline">Criar Linha</span>
                 </button>
@@ -292,32 +278,43 @@
 
     <main class="flex-grow flex flex-col items-center justify-center p-4 md:p-6 w-full max-w-7xl mx-auto z-10">
         
+        <!-- Painel de Menu Inicial -->
         <section id="menu-screen" class="w-full max-w-5xl py-6 space-y-8">
             <div class="text-center space-y-3">
                 <span class="text-xs tracking-widest font-black uppercase bg-amber-500/10 text-amber-400 px-4 py-1.5 rounded-full border border-amber-500/20">Teste seus Conhecimentos Históricos</span>
-                <h2 class="historical-font text-3xl md:text-5xl font-black text-slate-100 leading-tight">Os Fatos do Tempo</h2>
+                <h2 class="historical-font text-3xl md:text-5xl font-black text-slate-100 leading-tight">Os Fatos da História</h2>
                 <p class="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
                     Organize os marcos cronológicos arrastando cada fato até a sua data correspondente na régua espacial. Toque em um fato para ver sua descrição.
                 </p>
             </div>
 
             <div id="eras-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
+                <!-- Populado via Javascript -->
+            </div>
 
+            <!-- Listagem de Linhas Autorais Customizadas -->
             <div id="custom-era-panel" class="hidden bg-slate-900/60 border border-slate-800 p-6 rounded-2xl">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                     <h3 class="historical-font text-lg font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-gears text-sm"></i> Suas Linhas Customizadas (Até 10 marcos)
+                        <i class="fa-solid fa-gears text-sm"></i> Suas Linhas Customizadas (Até 15 marcos)
                     </h3>
-                    <button onclick="clearCustomTimeline()" class="text-xs text-rose-400 hover:text-rose-300">Apagar Todas</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="triggerImport()" class="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-900/50 py-1.5 px-3 rounded-lg">
+                            <i class="fa-solid fa-upload"></i> Importar Linha
+                        </button>
+                        <button onclick="clearCustomTimeline()" class="text-xs text-rose-400 hover:text-rose-300">Apagar Todas</button>
+                    </div>
                 </div>
                 <div id="custom-eras-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
+                    <!-- Populado via Javascript -->
+                </div>
             </div>
         </section>
 
+        <!-- Tabuleiro Principal da Partida Ativa -->
         <section id="game-screen" class="hidden w-full flex flex-col gap-6 md:gap-10">
             
+            <!-- Barra superior com status (HUD) -->
             <div class="w-full bg-slate-900/80 border border-slate-800/80 p-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between shadow-xl">
                 <div class="flex items-center space-x-3">
                     <div id="hud-era-icon" class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/25">
@@ -332,7 +329,8 @@
                 <div class="flex items-center space-x-3 bg-slate-950/60 py-2 px-4 rounded-xl border border-slate-800">
                     <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">Tentativas:</span>
                     <div id="lives-container" class="flex gap-1.5">
-                        </div>
+                        <!-- Ícones de vida dinâmicos -->
+                    </div>
                 </div>
 
                 <div class="flex items-center space-x-6">
@@ -347,30 +345,70 @@
                 </div>
             </div>
 
+            <!-- Ajuste de Escala Visual (Zoom do Tabuleiro) -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl shadow-md">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-xs font-bold text-slate-200 block leading-tight">Visualização do Tabuleiro</span>
+                        <span class="text-[10px] text-slate-400">Ajuste o tamanho dos elementos para caber melhor na sua tela</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 bg-slate-950/60 py-1.5 px-3 rounded-lg border border-slate-850">
+                        <button onclick="changeZoom(-0.05)" class="text-slate-400 hover:text-amber-400 transition-colors px-1" title="Diminuir Zoom">
+                            <i class="fa-solid fa-minus text-xs"></i>
+                        </button>
+                        <input type="range" id="zoom-slider" min="60" max="140" value="100" class="w-24 accent-amber-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="onZoomSliderChange(this.value)">
+                        <button onclick="changeZoom(0.05)" class="text-slate-400 hover:text-amber-400 transition-colors px-1" title="Aumentar Zoom">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
+                        <span id="zoom-percentage" class="text-xs font-mono font-bold text-amber-400 min-w-[36px] text-right">100%</span>
+                    </div>
+                    
+                    <button onclick="resetZoom()" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 hover:text-slate-200 bg-slate-950/40 border border-slate-850 py-1.5 px-2.5 rounded hover:border-slate-800 transition-all">
+                        Reset
+                    </button>
+                    
+                    <label class="flex items-center gap-2 cursor-pointer bg-slate-950/40 border border-slate-850 py-1.5 px-2.5 rounded hover:border-slate-800 transition-all select-none">
+                        <input type="checkbox" id="auto-zoom-chk" checked onchange="toggleAutoZoom(this.checked)" class="rounded bg-slate-900 border-slate-800 text-amber-500 focus:ring-amber-500 w-3.5 h-3.5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ajuste Automático</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Informações operacionais e instrução rápida de jogo -->
             <div class="text-center text-xs text-slate-400 space-y-1">
                 <p class="flex items-center justify-center gap-2">
                     <i class="fa-solid fa-arrows-up-down-left-right text-amber-400 animate-pulse"></i> 
                     <strong>Arraste os fatos</strong> do painel até o <strong>ano correspondente</strong> na régua temporal abaixo.
                 </p>
                 <p class="text-[10px] text-slate-500">
-                    💡 Dica: Toque no card para expandir. Depois toque na data correta para encaixar, se preferir.
+                    💡 Dica: Selecione um card e clique diretamente no círculo da data correta da régua se preferir usar atalhos de toque.
                 </p>
             </div>
 
+            <!-- Painel de seleção de fatos históricos desordenados -->
             <div class="w-full space-y-3">
-                <span class="text-xs text-slate-500 font-bold tracking-widest block uppercase text-center md:text-left">Fatos para Posicionar (Toque para Expandir):</span>
+                <span class="text-xs text-slate-500 font-bold tracking-widest block uppercase text-center md:text-left">Fatos para Posicionar:</span>
                 
-                <div id="drag-deck" class="min-h-[140px] p-4 bg-slate-950/40 rounded-2xl border border-dashed border-slate-800 flex flex-wrap gap-4 items-center justify-center relative">
-                    </div>
+                <div id="drag-deck" class="min-h-[160px] p-4 bg-slate-950/40 rounded-2xl border border-dashed border-slate-800 flex flex-wrap gap-4 items-center justify-center relative">
+                    <!-- Populado dinamicamente via JS -->
+                </div>
             </div>
 
+            <!-- Régua Temporal cronológica da rodada -->
             <div class="w-full py-10 px-4 bg-slate-900/40 border border-slate-800/80 rounded-2xl shadow-inner relative overflow-x-auto custom-scrollbar">
                 
                 <div class="relative py-6 min-w-max">
                     <div class="absolute top-[28px] left-[120px] right-[120px] h-1.5 bg-gradient-to-r from-slate-800 via-amber-500/40 to-slate-800 rounded-full z-0"></div>
                     
                     <div id="timeline-slots-container" class="flex gap-x-20 px-24 relative z-10">
-                        </div>
+                        <!-- Populado dinamicamente via JS -->
+                    </div>
                 </div>
 
             </div>
@@ -383,9 +421,11 @@
 
         </section>
 
+        <!-- Relatório de estatísticas e encerramento de rodada -->
         <section id="end-screen" class="hidden w-full max-w-2xl bg-slate-900/90 border border-slate-800/80 p-8 rounded-2xl shadow-2xl text-center space-y-6">
             <div id="end-status-icon" class="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl shadow-lg">
-                </div>
+                <!-- Ícone dinâmico baseado em vitória/derrota -->
+            </div>
 
             <div class="space-y-2">
                 <h2 id="end-title" class="historical-font text-3xl font-black text-slate-100">Fim de Jogo</h2>
@@ -411,6 +451,16 @@
                 </div>
             </div>
 
+            <!-- Linha de tempo cronológica de encerramento da partida resolvida -->
+            <div id="victory-summary" class="hidden text-left bg-slate-950 p-5 rounded-xl border border-slate-850/80 max-h-72 overflow-y-auto custom-scrollbar">
+                <h4 class="historical-font text-xs font-bold text-amber-400 uppercase tracking-widest mb-3 pb-2 border-b border-slate-800/80 flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol"></i> Resumo da Linha do Tempo Resolvida
+                </h4>
+                <div id="victory-summary-list" class="space-y-4 relative pl-4 border-l border-amber-500/30">
+                    <!-- Elementos ordenados cronologicamente -->
+                </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center pt-2">
                 <button onclick="goToMainMenu()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-house"></i> Voltar ao Menu
@@ -425,7 +475,7 @@
 
     <footer class="bg-slate-950/80 border-t border-slate-900 py-5 text-center text-[11px] text-slate-500 z-10">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-3">
-            <p>&copy; 2026 Os Fatos do Tempo. Desenvolvido para dinâmicas ativas de ensino de História. Plataforma REA-RP</p>
+            <p>&copy; 2026 Os Fatos da História. Desenvolvido para dinâmicas ativas de ensino de História. Plataforma REA-RP</p>
             <div class="flex items-center space-x-2">
                 <span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                 <span>rodrigo.pacheco@ifsp.edu.br</span>
@@ -433,6 +483,7 @@
         </div>
     </footer>
 
+    <!-- Formulário estruturado para criação de linhas de tempo personalizadas (Até 15 marcos) -->
     <div id="custom-timeline-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeCustomTimelineModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 transition-colors">
@@ -443,7 +494,7 @@
                 <h3 class="historical-font text-xl font-bold text-amber-400 flex items-center gap-2">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Criador de Linha do Tempo
                 </h3>
-                <p class="text-xs text-slate-400">Adicione de 3 até 10 fatos históricos ordenados com os anos correspondentes.</p>
+                <p class="text-xs text-slate-400">Adicione de 3 até 15 fatos históricos ordenados com os anos correspondentes.</p>
             </div>
 
             <div class="space-y-3 bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
@@ -476,7 +527,7 @@
 
             <div class="space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Fatos Adicionados nesta linha (<span id="temp-count" class="text-amber-400">0</span>/10)</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Fatos Adicionados nesta linha (<span id="temp-count" class="text-amber-400">0</span>/15)</span>
                     <span class="text-[9px] text-slate-500 font-semibold italic">Mínimo: 3 eventos</span>
                 </div>
                 <div id="temp-events-list" class="space-y-2 max-h-[220px] overflow-y-auto custom-scrollbar bg-slate-950/60 p-3 rounded-xl border border-slate-850">
@@ -495,6 +546,7 @@
         </div>
     </div>
 
+    <!-- Instruções didáticas básicas sobre o funcionamento do jogo -->
     <div id="tutorial-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 max-w-md w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
             <button onclick="closeTutorial()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 transition-colors">
@@ -510,19 +562,15 @@
                 </div>
                 <div class="flex gap-3">
                     <div class="bg-amber-500/10 text-amber-400 font-bold h-6 w-6 rounded-full flex items-center justify-center shrink-0">2</div>
-                    <p>O painel superior trará cartões contendo fatos históricos emblemáticos. Para economizar espaço, <strong>eles mostram apenas o título</strong>.</p>
+                    <p>Os cards trazem o **título e a descrição completa** totalmente visíveis.</p>
                 </div>
                 <div class="flex gap-3">
                     <div class="bg-amber-500/10 text-amber-400 font-bold h-6 w-6 rounded-full flex items-center justify-center shrink-0">3</div>
-                    <p><strong>Toque/Clique em um card</strong> para expandi-lo e revelar a descrição completa e as pistas sobre o período.</p>
+                    <p><strong>Arraste o fato</strong> até o marcador do ano correspondente na régua de tempo. Se acertar, ele se fixa na linha.</p>
                 </div>
                 <div class="flex gap-3">
                     <div class="bg-amber-500/10 text-amber-400 font-bold h-6 w-6 rounded-full flex items-center justify-center shrink-0">4</div>
-                    <p><strong>Arraste o fato</strong> até a marcação do ano correspondente na régua temporal de tempo abaixo. Se acertar, o card ficará fixado. Se errar, voltará ao deck e você perderá uma tentativa!</p>
-                </div>
-                <div class="flex gap-3">
-                    <div class="bg-amber-500/10 text-amber-400 font-bold h-6 w-6 rounded-full flex items-center justify-center shrink-0">5</div>
-                    <p><strong>Acessibilidade/Toque:</strong> Você também pode posicionar tocando primeiro para expandir e selecionar o card e, em seguida, tocando no círculo da data correta.</p>
+                    <p><strong>Selecione e Clique (Acessibilidade):</strong> Se preferir, você pode clicar/tocar em um card para selecioná-lo e, em seguida, clicar na data correta da régua temporal.</p>
                 </div>
             </div>
             <button onclick="closeTutorial()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-bold rounded-xl transition-all">
@@ -531,13 +579,14 @@
         </div>
     </div>
 
+    <!-- Toast flutuante para avisos de sistema e jogadas -->
     <div id="toast" class="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 border border-slate-750 text-slate-200 px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 z-50 transition-all duration-300">
         <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
         <span id="toast-text" class="text-xs font-semibold">Sucesso</span>
     </div>
 
     <script>
-        // --- ESTADO GLOBAL DO JOGO ---
+        // Estado da aplicação e controle de fluxo do jogo
         const state = {
             customEras: [],
             currentEra: null,
@@ -549,15 +598,16 @@
             placedCount: 0,
             selectedCardElement: null,
             shuffledEvents: [],
-            tempCustomEvents: []
+            tempCustomEvents: [],
+            zoom: 1.0,         
+            autoZoom: true     
         };
 
-        // --- CONTROLE DE SOM (MUTE/UNMUTE) ---
+        // Gerenciamento e controle da saída de áudio
         function toggleSound() {
             const isMuted = SoundFX.toggle();
             updateSoundButtonUI(isMuted);
             if (!isMuted) {
-                // Emite um pequeno clique indicando que o som foi ligado
                 SoundFX.playClick();
             }
         }
@@ -575,7 +625,7 @@
             }
         }
 
-        // --- CONTROLE DE TELAS (NAVEGAÇÃO) ---
+        // Chaveadores visuais de tela principal do sistema
         function showScreen(screenId) {
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.add('hidden');
@@ -590,7 +640,6 @@
             renderErasMenu();
         }
 
-        // --- CONTROLE DE TUTORIAL ---
         function openTutorial() {
             SoundFX.playClick();
             document.getElementById('tutorial-modal').classList.remove('hidden');
@@ -601,7 +650,7 @@
             document.getElementById('tutorial-modal').classList.add('hidden');
         }
 
-        // --- SISTEMA DE NOTIFICAÇÕES (TOAST) ---
+        // Emissão estruturada de avisos visuais rápidos (Toasts)
         let toastTimeout = null;
         function showNotification(message, type = "info") {
             const toast = document.getElementById('toast');
@@ -609,8 +658,6 @@
             const toastIcon = document.getElementById('toast-icon');
 
             toastText.innerText = message;
-
-            // Limpa classes anteriores de ícone
             toastIcon.className = "fa-solid";
             
             if (type === "success") {
@@ -632,11 +679,11 @@
             }, 3000);
         }
 
+        // Renderização dinâmica dos blocos de eras (Menu principal)
         function renderErasMenu() {
             const grid = document.getElementById('eras-grid');
             grid.innerHTML = '';
 
-            // Renderizar as eras padrões
             gameEras.forEach(era => {
                 grid.innerHTML += `
                     <div class="glassmorphism p-6 rounded-2xl hover:border-amber-500/50 transition-all duration-300 relative overflow-hidden group flex flex-col justify-between">
@@ -660,7 +707,6 @@
                 `;
             });
 
-            // Se existirem eras personalizadas
             const customPanel = document.getElementById('custom-era-panel');
             const customList = document.getElementById('custom-eras-list');
 
@@ -675,13 +721,18 @@
                                 <h4 class="historical-font text-sm font-bold text-slate-200">${era.name}</h4>
                                 <span class="text-[10px] text-slate-500 font-semibold uppercase block mt-1">${era.events.length} Eventos Cadastrados</span>
                             </div>
-                            <div class="pt-3 flex justify-between items-center">
+                            <div class="pt-4 flex flex-wrap gap-2 justify-between items-center border-t border-slate-900 mt-3">
                                 <button onclick="deleteSingleCustomEra(${idx})" class="text-[11px] text-rose-500 hover:text-rose-400">
                                     <i class="fa-solid fa-trash-can"></i> Excluir
                                 </button>
-                                <button onclick="startCustomEra(${idx})" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded-md transition-all flex items-center gap-1.5">
-                                    Jogar <i class="fa-solid fa-play text-[9px]"></i>
-                                </button>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="exportCustomEra(${idx})" class="text-[11px] text-slate-400 hover:text-slate-200 py-1 px-2 bg-slate-900/80 rounded border border-slate-800" title="Baixar Linha de Tempo">
+                                        <i class="fa-solid fa-download"></i> Exportar
+                                    </button>
+                                    <button onclick="startCustomEra(${idx})" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded transition-all flex items-center gap-1.5">
+                                        Jogar <i class="fa-solid fa-play text-[9px]"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -691,7 +742,7 @@
             }
         }
 
-        // --- INICIALIZAÇÃO DA PARTIDA ---
+        // Executores de início de rodada padrão e personalizada
         function startEra(eraId) {
             SoundFX.playClick();
             const era = gameEras.find(e => e.id === eraId);
@@ -715,11 +766,17 @@
             state.placedCount = 0;
             state.selectedCardElement = null;
 
-            // Embaralha os fatos
             state.shuffledEvents = [...era.events].sort(() => Math.random() - 0.5);
 
             showScreen('game-screen');
             updateHUD();
+            
+            if (state.autoZoom) {
+                calculateAutoZoom();
+            } else {
+                applyZoom();
+            }
+
             renderGameBoard();
             showNotification(`Era iniciada: ${era.name}`, "info");
         }
@@ -729,9 +786,9 @@
             setupGame(state.currentEra);
         }
 
+        // Sincronização dos painéis informativos do HUD
         function updateHUD() {
             document.getElementById('hud-era-name').innerText = state.currentEra.name;
-            // Exibição de pontos suportando números negativos e formatando corretamente
             const scoreStr = state.score < 0 
                 ? `-${String(Math.abs(state.score)).padStart(4, '0')}` 
                 : String(state.score).padStart(4, '0');
@@ -752,21 +809,19 @@
             }
         }
 
-        // --- SELECIONAR E EXPANDIR CARD INDIVIDUAL ---
+        // Destaca o card selecionado aplicando contorno sem saltar de tamanho ou posição
         function selectCard(card) {
-            // Colapsar qualquer outro card que esteja aberto
             document.querySelectorAll('.draggable-card').forEach(c => {
                 if (c !== card) {
-                    c.classList.remove('expanded', 'ring-4', 'ring-amber-500');
+                    c.classList.remove('ring-4', 'ring-amber-500');
                 }
             });
 
-            // Expande e seleciona o card atual
-            card.classList.add('expanded', 'ring-4', 'ring-amber-500');
+            card.classList.add('ring-4', 'ring-amber-500');
             state.selectedCardElement = card;
         }
 
-        // --- CONSTRUINDO CARTÕES E ALVOS DA TIMELINE ---
+        // Geração dinâmica das cartas do deck e dos slots receptores da régua cronológica
         function renderGameBoard() {
             const deck = document.getElementById('drag-deck');
             const timelineContainer = document.getElementById('timeline-slots-container');
@@ -774,37 +829,30 @@
             deck.innerHTML = '';
             timelineContainer.innerHTML = '';
 
-            // 1. Renderizar os cards arrastáveis compactos no topo
             state.shuffledEvents.forEach((evt, idx) => {
                 deck.innerHTML += `
                     <div id="card-${idx}" 
                          data-idx="${idx}"
                          data-year="${evt.year}"
-                         class="draggable-card relative w-56 px-4 py-3.5 rounded-xl bg-slate-900 border border-slate-850 flex flex-col items-center text-center shadow-lg transform transition-all duration-300 z-10"
+                         class="draggable-card relative w-64 p-4 rounded-xl bg-slate-900 border border-slate-850 flex flex-col justify-between items-center text-center shadow-lg transform transition-all duration-300 z-10"
                          onpointerdown="onCardPointerDown(event)">
                         
                         <div class="flex items-center gap-2 w-full justify-between pointer-events-none select-none">
                             <div class="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-[10px] shrink-0 border border-amber-500/20">
                                 <i class="fa-solid ${evt.icon || 'fa-hourglass-start'}"></i>
                             </div>
-                            <h5 class="historical-font font-bold text-[10px] md:text-[11px] text-slate-200 truncate leading-normal text-left flex-grow pl-1.5">${evt.title}</h5>
-                            <i class="fa-solid fa-chevron-down text-[8px] text-slate-500 card-arrow transition-transform duration-300"></i>
+                            <h5 class="historical-font font-bold text-[11px] md:text-[12px] text-slate-200 whitespace-normal break-words leading-tight text-left flex-grow pl-1.5">${evt.title}</h5>
                         </div>
                         
-                        <div class="card-details opacity-0 pointer-events-none w-full mt-3 pt-3 border-t border-slate-800/60 flex flex-col items-center select-none">
-                            <p class="text-[10px] md:text-[11px] text-slate-400 leading-relaxed text-center">${evt.desc}</p>
-                            <span class="text-[9px] text-amber-400/80 mt-2 font-bold flex items-center gap-1">
-                                <i class="fa-solid fa-arrows-up-down-left-right text-[8px] animate-pulse"></i> Arraste p/ a data correta
-                            </span>
+                        <div class="card-details w-full mt-3 pt-3 border-t border-slate-800/60 flex flex-col items-center select-none">
+                            <p class="text-[10px] md:text-[11px] text-slate-400 leading-relaxed text-center whitespace-normal break-words">${evt.desc}</p>
                         </div>
                     </div>
                 `;
             });
 
-            // 2. Ordenar cronologicamente os anos para construir a régua física estável
             const chronologicalEvents = [...state.currentEra.events].sort((a, b) => a.year - b.year);
 
-            // 3. Renderizar os alvos (Dropzones) da Régua usando largura fixa estrita de 240px por coluna
             chronologicalEvents.forEach((evt) => {
                 const yearLabel = evt.year < 0 ? `${Math.abs(evt.year)} A.C.` : `${evt.year}`;
 
@@ -824,18 +872,111 @@
                     </div>
                 `;
             });
+
+            applyZoom();
         }
 
-        // --- CONTROLLER DE DRAG & DROP FÍSICO COM POINTEREVENTS ---
+        // Funções para controle, cálculo e aplicação de escala visual (Zoom)
+        function applyZoom() {
+            const deck = document.getElementById('drag-deck');
+            const timelineSlots = document.getElementById('timeline-slots-container');
+            const percentageSpan = document.getElementById('zoom-percentage');
+            const slider = document.getElementById('zoom-slider');
+
+            const zVal = state.zoom;
+            
+            if (deck) {
+                deck.style.zoom = zVal;
+            }
+            if (timelineSlots) {
+                timelineSlots.style.zoom = zVal;
+            }
+            
+            if (percentageSpan) {
+                percentageSpan.innerText = `${Math.round(zVal * 100)}%`;
+            }
+            if (slider) {
+                slider.value = Math.round(zVal * 100);
+            }
+        }
+
+        function changeZoom(val) {
+            state.autoZoom = false;
+            const autoChk = document.getElementById('auto-zoom-chk');
+            if (autoChk) autoChk.checked = false;
+
+            state.zoom = Math.min(Math.max(state.zoom + val, 0.6), 1.4);
+            applyZoom();
+        }
+
+        function onZoomSliderChange(val) {
+            state.autoZoom = false;
+            const autoChk = document.getElementById('auto-zoom-chk');
+            if (autoChk) autoChk.checked = false;
+
+            state.zoom = parseInt(val) / 100;
+            applyZoom();
+        }
+
+        function resetZoom() {
+            state.autoZoom = false;
+            const autoChk = document.getElementById('auto-zoom-chk');
+            if (autoChk) autoChk.checked = false;
+
+            state.zoom = 1.0;
+            applyZoom();
+        }
+
+        function toggleAutoZoom(enabled) {
+            state.autoZoom = enabled;
+            if (enabled) {
+                calculateAutoZoom();
+            }
+        }
+
+        function calculateAutoZoom() {
+            if (!state.autoZoom || !state.currentEra) return;
+            
+            const eventCount = state.currentEra.events.length;
+            const screenWidth = window.innerWidth;
+            let recommendedZoom = 1.0;
+
+            if (screenWidth < 768) { 
+                if (eventCount > 10) recommendedZoom = 0.60;
+                else if (eventCount > 7) recommendedZoom = 0.70;
+                else recommendedZoom = 0.80;
+            } else if (screenWidth < 1280) { 
+                if (eventCount > 12) recommendedZoom = 0.75;
+                else if (eventCount > 8) recommendedZoom = 0.85;
+                else recommendedZoom = 0.95;
+            } else { 
+                if (eventCount > 12) recommendedZoom = 0.85;
+                else if (eventCount > 10) recommendedZoom = 0.90;
+                else recommendedZoom = 1.0;
+            }
+
+            state.zoom = recommendedZoom;
+            applyZoom();
+        }
+
+        window.addEventListener('resize', () => {
+            if (state.currentEra && state.autoZoom) {
+                calculateAutoZoom();
+            }
+        });
+
+        // Controle de arraste físico de elementos estruturado com tolerância (threshold) de movimento
         let dragInfo = {
-            active: false,
+            active: false,      
+            pending: false,     
             element: null,
             startX: 0,
             startY: 0,
             origX: 0,
             origY: 0,
             offsetX: 0,
-            offsetY: 0
+            offsetY: 0,
+            hasMoved: false     
         };
 
         function onCardPointerDown(e) {
@@ -843,67 +984,77 @@
             SoundFX.init();
 
             const card = e.currentTarget;
-            if (card.classList.contains('locked-placed')) return; // impede de arrastar se já colocado correto
+            if (card.classList.contains('locked-placed')) return;
 
-            // Ativa visualização expandida
+            // Seleciona imediatamente o elemento para permitir clique alternativo sem causar pulos físicos
             selectCard(card);
 
             const rect = card.getBoundingClientRect();
             
-            dragInfo.active = true;
+            dragInfo.pending = true;
+            dragInfo.active = false;
+            dragInfo.hasMoved = false;
             dragInfo.element = card;
             
-            // Grava coordenadas de partida absoluta
             dragInfo.startX = e.clientX;
             dragInfo.startY = e.clientY;
             
-            // Grava o posicionamento inicial relativo do elemento
             dragInfo.origX = rect.left;
             dragInfo.origY = rect.top;
 
-            // Determinar o offset em relação ao local do toque/click
             dragInfo.offsetX = e.clientX - rect.left;
             dragInfo.offsetY = e.clientY - rect.top;
 
-            // Altera estilos para flutuação do card mantendo a largura do estado expandido
-            card.style.width = `${rect.width}px`;
-            card.style.position = 'fixed';
-            card.style.left = `${rect.left}px`;
-            card.style.top = `${rect.top}px`;
-            card.classList.add('dragging');
-
-            // Capturar o ponteiro para ouvir em qualquer local da tela
             card.setPointerCapture(e.pointerId);
             
-            // Atribui ouvintes dinâmicos
             card.onpointermove = onCardPointerMove;
             card.onpointerup = onCardPointerUp;
             card.onpointercancel = onCardPointerUp;
         }
 
         function onCardPointerMove(e) {
-            if (!dragInfo.active) return;
+            if (!dragInfo.pending) return;
             e.preventDefault();
 
             const card = dragInfo.element;
             const currentX = e.clientX;
             const currentY = e.clientY;
 
-            // Atualiza posicionamento fixo do card de forma fluida
-            card.style.left = `${currentX - dragInfo.offsetX}px`;
-            card.style.top = `${currentY - dragInfo.offsetY}px`;
+            const dx = currentX - dragInfo.startX;
+            const dy = currentY - dragInfo.startY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-            // Detectar colisão e iluminar os alvos que estiverem sobrepostos
-            detectOverlaps(currentX, currentY);
+            // Inicia o estado físico de arraste flutuante apenas após mover-se mais de 8 pixels
+            if (!dragInfo.active && dist > 8) {
+                dragInfo.active = true;
+                dragInfo.hasMoved = true;
+                
+                const rect = card.getBoundingClientRect();
+                
+                card.style.width = `${rect.width}px`;
+                card.style.position = 'fixed';
+                card.style.left = `${rect.left}px`;
+                card.style.top = `${rect.top}px`;
+                card.style.zoom = state.zoom;
+                card.classList.add('dragging');
+            }
+
+            if (dragInfo.active) {
+                card.style.left = `${currentX - dragInfo.offsetX}px`;
+                card.style.top = `${currentY - dragInfo.offsetY}px`;
+                detectOverlaps(currentX, currentY);
+            }
         }
 
         function onCardPointerUp(e) {
-            if (!dragInfo.active) return;
+            if (!dragInfo.pending) return;
+            
+            const card = dragInfo.element;
+            const wasDragging = dragInfo.active;
+
+            dragInfo.pending = false;
             dragInfo.active = false;
 
-            const card = dragInfo.element;
-            
-            // Limpa hooks de Ponteiro
             card.releasePointerCapture(e.pointerId);
             card.onpointermove = null;
             card.onpointerup = null;
@@ -914,24 +1065,25 @@
             const currentX = e.clientX;
             const currentY = e.clientY;
 
-            // Limpa as marcações de brilho de alvos
             clearAllTargetGlows();
 
-            // Verificar se o card foi solto em cima de algum alvo válido
-            const targetUnder = checkCollisionTargets(currentX, currentY);
+            if (wasDragging) {
+                const targetUnder = checkCollisionTargets(currentX, currentY);
 
-            if (targetUnder) {
-                const targetYear = parseInt(targetUnder.dataset.year);
-                const cardYear = parseInt(card.dataset.year);
-
-                attemptPlacement(card, targetYear, cardYear, targetUnder);
+                if (targetUnder) {
+                    const targetYear = parseInt(targetUnder.dataset.year);
+                    const cardYear = parseInt(card.dataset.year);
+                    attemptPlacement(card, targetYear, cardYear, targetUnder);
+                } else {
+                    restoreCardToDeck(card);
+                }
             } else {
-                // Se soltar fora de um slot, restaura o card de volta para o deck
+                // Clique simples - mantém seleção estável no deck
                 restoreCardToDeck(card);
             }
         }
 
-        // --- SISTEMA DE SELEÇÃO POR TOQUE/CLIQUE ALTERNATIVO ---
+        // Processamento de clique alternativo direto sobre o alvo (Acessibilidade de Toque)
         function onTargetClicked(targetYear) {
             if (!state.selectedCardElement) {
                 showNotification("Selecione um card acima primeiro!", "info");
@@ -945,7 +1097,6 @@
             attemptPlacement(card, targetYear, cardYear, targetUnder);
         }
 
-        // --- COLISÃO & FEEDBACK GRÁFICO ---
         function detectOverlaps(x, y) {
             clearAllTargetGlows();
             const hitTarget = checkCollisionTargets(x, y);
@@ -960,7 +1111,6 @@
 
             targets.forEach(target => {
                 const rect = target.getBoundingClientRect();
-                // Verificação de caixa física de colisão estrita e desimpedida
                 if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
                     matchedTarget = target;
                 }
@@ -969,7 +1119,6 @@
             return matchedTarget;
         }
 
-        // --- AUXILIARES E VERIFICAÇÃO ---
         function clearAllTargetGlows() {
             document.querySelectorAll('.dropzone-target').forEach(t => {
                 t.classList.remove('slot-glow-active');
@@ -981,9 +1130,10 @@
             card.style.left = '';
             card.style.top = '';
             card.style.width = '';
+            card.style.zoom = ''; 
         }
 
-        // --- SISTEMA DE VERIFICAÇÃO DE RESPOSTA ---
+        // Validação e fixação estrutural das respostas enviadas pelo usuário
         function attemptPlacement(card, targetYear, cardYear, targetElement) {
             if (targetElement.classList.contains('locked-target')) {
                 showNotification("Esta data já foi devidamente ocupada!", "error");
@@ -991,36 +1141,30 @@
                 return;
             }
 
-            // Comparação numérica exata suportando negativos perfeitos (-335 === -335)
             if (targetYear === cardYear) {
-                // --- ACERTO ---
                 SoundFX.playSuccess();
                 showNotification("Excelente! Marco temporal perfeitamente encaixado.", "success");
 
-                // Ancoras definitivas e estilos
                 targetElement.classList.remove('border-slate-700');
                 targetElement.classList.add('slot-glow-correct', 'locked-target', 'bg-emerald-950/60', 'border-emerald-500');
                 targetElement.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>`;
 
-                // Remove card do deck e acopla no espaço inferior da coluna do ano na linha
                 const idx = parseInt(card.dataset.idx);
                 const currentEvent = state.shuffledEvents[idx];
                 card.remove();
 
                 const cardContainer = targetElement.parentElement;
                 cardContainer.innerHTML += `
-                    <div class="mt-12 w-52 p-3 bg-gradient-to-b from-emerald-950/50 to-slate-900/90 border border-emerald-500/40 rounded-xl text-center shadow-lg transition-transform duration-300">
-                        <h6 class="historical-font font-black text-[11px] text-slate-100 line-clamp-1">${currentEvent.title}</h6>
-                        <p class="text-[9px] text-slate-400 line-clamp-3 leading-tight mt-1.5">${currentEvent.desc}</p>
+                    <div class="mt-12 w-60 p-3 bg-gradient-to-b from-emerald-950/50 to-slate-900/90 border border-emerald-500/40 rounded-xl text-center shadow-lg transition-transform duration-300">
+                        <h6 class="historical-font font-black text-[11px] text-slate-100 whitespace-normal break-words leading-tight">${currentEvent.title}</h6>
+                        <p class="text-[9px] text-slate-400 leading-normal mt-1.5 whitespace-normal break-words">${currentEvent.desc}</p>
                     </div>
                 `;
 
-                // Acrescenta Pontos
                 const pointsEarned = 100 * state.combo;
                 state.score += pointsEarned;
                 state.placedCount++;
 
-                // Incrementa Combo
                 state.combo++;
                 if (state.combo > state.maxCombo) {
                     state.maxCombo = state.combo;
@@ -1029,7 +1173,6 @@
                 updateHUD();
                 state.selectedCardElement = null;
 
-                // Checa condição de Vitória da Era
                 if (state.placedCount === state.currentEra.events.length) {
                     setTimeout(() => {
                         finishGame(true);
@@ -1037,26 +1180,21 @@
                 }
 
             } else {
-                // --- ERRO ---
                 SoundFX.playError();
                 showNotification("História incorreta! Analise melhor o título e suas pistas.", "error");
 
-                // Reduz vidas e aplica penalidade de pontos (pode ficar abaixo de zero)
                 state.lives--;
-                state.score -= 50; // Penalidade por erro: perde 50 pontos
-                state.combo = 1; // quebra combo
+                state.score -= 50; 
+                state.combo = 1; 
                 updateHUD();
 
-                // Sacode e pisca o alvo vermelho temporariamente
                 targetElement.classList.add('border-rose-500', 'shadow-[0_0_15px_rgba(239,68,68,0.5)]');
                 setTimeout(() => {
                     targetElement.classList.remove('border-rose-500', 'shadow-[0_0_15px_rgba(239,68,68,0.5)]');
                 }, 1000);
 
-                // Volta o card para o deck
                 restoreCardToDeck(card);
 
-                // Checa condição de Derrota
                 if (state.lives <= 0) {
                     setTimeout(() => {
                         finishGame(false);
@@ -1065,7 +1203,7 @@
             }
         }
 
-        // --- RELATÓRIO E TELA FINAL ---
+        // Emissão do relatório de fim de jogo e listagem consolidada (Vitória/Derrota)
         function finishGame(victory) {
             showScreen('end-screen');
 
@@ -1073,8 +1211,9 @@
             const endTitle = document.getElementById('end-title');
             const endDesc = document.getElementById('end-desc');
             const replayBtn = document.getElementById('end-replay-btn');
+            const summaryContainer = document.getElementById('victory-summary');
+            const summaryList = document.getElementById('victory-summary-list');
 
-            // Preenche estatísticas
             document.getElementById('stat-hits').innerText = `${state.placedCount}/${state.currentEra.events.length}`;
             document.getElementById('stat-score').innerText = state.score;
             document.getElementById('stat-combo').innerText = `${state.maxCombo}x`;
@@ -1088,6 +1227,21 @@
                 endDesc.innerText = "Histórico perfeito! Você provou ter pleno domínio sobre esta linha histórica.";
                 
                 replayBtn.className = "px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-extrabold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 transform active:scale-95";
+
+                summaryContainer.classList.remove('hidden');
+                summaryList.innerHTML = '';
+                
+                const sortedEvents = [...state.currentEra.events].sort((a, b) => a.year - b.year);
+                sortedEvents.forEach(evt => {
+                    const yearLabel = evt.year < 0 ? `${Math.abs(evt.year)} A.C.` : `${evt.year}`;
+                    summaryList.innerHTML += `
+                        <div class="relative pl-1">
+                            <div class="absolute -left-[22px] top-1 w-2.5 h-2.5 rounded-full bg-amber-400 ring-4 ring-slate-950"></div>
+                            <div class="text-xs font-bold text-amber-300">${yearLabel} - ${evt.title}</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">${evt.desc}</div>
+                        </div>
+                    `;
+                });
             } else {
                 statusIcon.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl shadow-lg bg-rose-500/20 text-rose-400 border border-rose-500/30";
                 statusIcon.innerHTML = `<i class="fa-solid fa-hourglass-empty"></i>`;
@@ -1095,10 +1249,12 @@
                 endDesc.innerText = "Suas tentativas de ordenar esta era falharam. Os fatos históricos exigem uma nova revisão e reflexão.";
                 
                 replayBtn.className = "px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-extrabold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 transform active:scale-95";
+                
+                summaryContainer.classList.add('hidden');
             }
         }
 
-        // --- SISTEMA DE LINHAS DE TEMPO PERSONALIZADAS ---
+        // Operações de gerenciamento do modal de linhas customizadas
         function openCustomTimelineModal() {
             SoundFX.playClick();
             document.getElementById('custom-timeline-modal').classList.remove('hidden');
@@ -1116,8 +1272,8 @@
             e.preventDefault();
             SoundFX.playClick();
 
-            if (state.tempCustomEvents.length >= 10) {
-                showNotification("Máximo de 10 fatos históricos atingido nesta era!", "error");
+            if (state.tempCustomEvents.length >= 15) {
+                showNotification("Máximo de 15 fatos históricos atingido nesta era!", "error");
                 return;
             }
 
@@ -1209,7 +1365,69 @@
             showNotification("Linha de tempo gravada com sucesso!", "success");
         }
 
-        // --- ARMAZENAMENTO LOCAL (LOCALSTORAGE) ---
+        // Exportação física das linhas em formato JSON
+        function exportCustomEra(index) {
+            SoundFX.playClick();
+            const era = state.customEras[index];
+            if (!era) return;
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(era, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            const fileName = era.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            downloadAnchor.setAttribute("download", `linha_do_tempo_${fileName}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showNotification("Linha do tempo exportada com sucesso!", "success");
+        }
+
+        function triggerImport() {
+            SoundFX.playClick();
+            document.getElementById('import-file-input').click();
+        }
+
+        // Processamento e validação de importação de arquivos de terceiros
+        function importCustomEra(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    
+                    if (!imported.name || !Array.isArray(imported.events)) {
+                        throw new Error("Formato inválido. Precisa de título e eventos.");
+                    }
+                    if (imported.events.length < 3 || imported.events.length > 15) {
+                        throw new Error("A linha deve conter de 3 a 15 acontecimentos.");
+                    }
+
+                    imported.events.forEach((evt, idx) => {
+                        if (evt.year === undefined || !evt.title || !evt.desc) {
+                            throw new Error(`O evento número ${idx + 1} está com campos obrigatórios ausentes.`);
+                        }
+                    });
+
+                    imported.id = `custom-${Date.now()}`;
+                    if (!imported.description) imported.description = "Linha do tempo didática importada.";
+                    if (!imported.accentColor) imported.accentColor = "from-amber-600 to-yellow-500";
+
+                    state.customEras.push(imported);
+                    saveCustomErasToStorage();
+                    renderErasMenu();
+                    showNotification(`Linha "${imported.name}" carregada com sucesso!`, "success");
+                } catch (err) {
+                    showNotification(`Falha na importação: ${err.message}`, "error");
+                } finally {
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Gerenciamento e leitura de persistência local (LocalStorage)
         function saveCustomErasToStorage() {
             localStorage.setItem('mestre_custom_eras', JSON.stringify(state.customEras));
         }
@@ -1241,7 +1459,7 @@
             showNotification("Lote customizado totalmente limpo.", "info");
         }
 
-        // --- ENTRADA DE JANELA ---
+        // Gatilho de inicialização e leitura de parâmetros ao abrir a janela
         window.onload = function() {
             loadCustomErasFromStorage();
             
